@@ -12,8 +12,6 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
    ```
 
 2. **Create the infrastructure**
-   You'll need to set up the following environment variables:
-
    - Run the [1-create-infra](1-infra/1-create-infra.ipynb)
    
    After running, an `.env` file will be created with all necessary environment variables
