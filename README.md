@@ -19,7 +19,7 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
    After running, an `.env` file will be created with all necessary environment variables
 
 3. **Running the Notebooks**
-   - Open each folder's notebook [2-notebooks](../ai-foundry-workshop/2-notebooks/)
+   - Open each [notebook's folder](../ai-foundry-workshop/2-notebooks/)
 
 4. **Delete the Resources**
    - Run the [2-clean-up-resources](../ai-foundry-workshop/1-infra/2-clean-up-resources.ipynb)
