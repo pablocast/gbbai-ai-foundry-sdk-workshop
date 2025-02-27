@@ -1,8 +1,8 @@
-# Azure AI Foundry Workshop Notebooks
+# <img src="./utils/media/ai_foundry.png" alt="Azure Foundry" style="width:30px;height:30px;"/> # Azure AI Foundry Workshop Notebooks
 
 This directory contains Jupyter notebooks for hands-on exercises with Azure AI Foundry.
 
-## Setup Instructions
+## Instructions
 
 1. **Python Environment Setup**
    ```bash
