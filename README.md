@@ -12,7 +12,7 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
    ```
 
 2. **Create the infrastructure**
-   - Run the [1-create-infra](1-infra/1-create-infra.ipynb)
+   - Run the [1-create-infra notebook](1-infra/1-create-infra.ipynb)
    
    After running, an `.env` file will be created with all necessary environment variables
 
