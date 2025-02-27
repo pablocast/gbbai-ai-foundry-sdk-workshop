@@ -19,7 +19,7 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
    After running, an `.env` file will be created with all necessary environment variables
 
 3. **Running the Notebooks**
-   - Open each [notebook's folder](2-notebooks/)
+   - Open each [notebook's folder](2-notebooks/) and execute the notebook
 
 4. **Delete the Resources**
    - Run the [2-clean-up-resources](1-infra/2-clean-up-resources.ipynb)
