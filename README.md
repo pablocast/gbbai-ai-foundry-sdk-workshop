@@ -5,11 +5,11 @@ This directory contains Jupyter notebooks for hands-on exercises with Azure AI F
 ## 🔧 Prerequisites
 
 + [azd](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd), used to deploy all Azure resources and assets used in this sample.
-
 + [PowerShell Core pwsh](https://github.com/PowerShell/powershell/releases) if using Windows
-
 + [Python 3.11](https://www.python.org/downloads/release/python-3110/)
-
++  [An Azure Subscription](https://azure.microsoft.com/free/) with Contributor permissions
++  [Sign in to Azure with Azure CLI](https://learn.microsoft.com/cli/azure/authenticate-azure-cli-interactively)
++  [VS Code](https://code.visualstudio.com/) installed with the [Jupyter notebook extension](https://marketplace.visualstudio.com/items?itemName=ms-toolsai.jupyter) enabled
 
 ## Instructions
 

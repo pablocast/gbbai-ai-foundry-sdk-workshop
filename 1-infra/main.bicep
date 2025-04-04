@@ -22,13 +22,6 @@ param searchServiceSku string
 param searchServiceReplicaCount int = 1
 param searchServicePartitionCount int = 1
 
-@description('Params for the MCP Server')
-param githubAPIPath string = 'github'
-param weatherAPIPath string = 'weather'
-param servicenowAPIPath string = 'servicenow'
-param serviceNowInstanceName string
-
-
 // ------------------
 //    VARIABLES
 // ------------------
