@@ -2,6 +2,15 @@
 
 This directory contains Jupyter notebooks for hands-on exercises with Azure AI Foundry.
 
+## 🔧 Prerequisites
+
++ [azd](https://learn.microsoft.com/azure/developer/azure-developer-cli/install-azd), used to deploy all Azure resources and assets used in this sample.
+
++ [PowerShell Core pwsh](https://github.com/PowerShell/powershell/releases) if using Windows
+
++ [Python 3.11](https://www.python.org/downloads/release/python-3110/)
+
+
 ## Instructions
 
 1. **Python Environment Setup**
