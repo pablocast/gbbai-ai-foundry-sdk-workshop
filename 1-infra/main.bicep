@@ -111,7 +111,7 @@ resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-
 
 
 resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
-  name: '$searh-${resourceSuffix}'
+  name: 'search-${resourceSuffix}'
   location: location
   sku: {
     name: searchServiceSku
