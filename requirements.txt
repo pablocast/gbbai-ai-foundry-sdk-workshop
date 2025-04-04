@@ -11,6 +11,9 @@ azure-monitor-opentelemetry                  # Azure Monitor OpenTelemetry integ
 azure-core-tracing-opentelemetry             # Azure core OpenTelemetry tracing
 opentelemetry-exporter-otlp                  # OpenTelemetry protocol exporter
 opentelemetry-sdk                            # OpenTelemetry SDK
+opentelemetry-instrumentation-openai-v2 
+opentelemetry-exporter-otlp-proto-grpc
+
 
 # Jupyter and Development Tools
 jupyter                                      # Jupyter notebook interface
@@ -23,3 +26,6 @@ nbformat                                     # Notebook format conversion
 asyncio                                      # Async I/O support
 typing                                       # Type hinting support
 
+
+# MCP protocol
+mcp

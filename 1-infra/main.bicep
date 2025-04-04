@@ -279,6 +279,52 @@ resource AISearchConnection 'Microsoft.MachineLearningServices/workspaces/connec
   }
 }
 
+// Roles for AI Services
+resource cognitiveServicesContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '25fbc0a9-bd7c-42a3-aa1a-3b75d497ee68'
+  scope: resourceGroup()
+
+}
+resource cognitiveServicesContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01'= {
+  scope: account
+  name: guid(account.id, cognitiveServicesContributorRole.id, project.id)
+  properties: {  
+    principalId: project.identity.principalId
+    roleDefinitionId: cognitiveServicesContributorRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+
+resource cognitiveServicesOpenAIUserRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '5e0bd9bd-7b93-4f28-af87-19fc36ad61bd'
+  scope: resourceGroup()
+}
+resource cognitiveServicesOpenAIUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: account
+  name: guid(account.id, cognitiveServicesOpenAIUserRole.id, project.id)
+  properties: {
+    principalId: project.identity.principalId
+    roleDefinitionId: cognitiveServicesOpenAIUserRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource cognitiveServicesUserRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: 'a97b65f3-24c7-4388-baec-2e87135dc908'
+  scope: resourceGroup()
+}
+resource cognitiveServicesUserRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: account
+  name: guid(account.id, cognitiveServicesUserRole.id, project.id)
+  properties: {
+    principalId: project.identity.principalId
+    roleDefinitionId: cognitiveServicesUserRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+
 // Roles for Integrated Vectorization
 resource searchIndexDataContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
   name: '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
@@ -352,5 +398,12 @@ output projectId string = project.id
 var projectEndoint = replace(replace(project.properties.discoveryUrl, 'https://', ''), '/discovery', '')
 output projectConnectionString string = '${projectEndoint};${subscription().subscriptionId};${resourceGroup().name};${project.name}'
 
+output bingConnectionName string = bingSearchConnection.name
+
 output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
 output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPServerContainerAppFQDN
+
+output applicationInsightsName  string = applicationInsights.name
+output containerRegistryName string = containerRegistry.name
+
+output model_deployment_name string = modelDeployment[2].name
