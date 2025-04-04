@@ -10,10 +10,24 @@ param modelsConfig array = []
 param tagValues object = {
 }
 
-// Creates Azure dependent resources for Azure AI studio
+@description('The principal ID of the user to assign the role to')
+param principalId string = ''
 
+// Creates Azure dependent resources for Azure AI studio
 @description('Azure region of the deployment')
 param location string = resourceGroup().location
+
+@description('The SKU for the Search Service')
+param searchServiceSku string 
+param searchServiceReplicaCount int = 1
+param searchServicePartitionCount int = 1
+
+@description('Params for the MCP Server')
+param githubAPIPath string = 'github'
+param weatherAPIPath string = 'weather'
+param servicenowAPIPath string = 'servicenow'
+param serviceNowInstanceName string
+
 
 // ------------------
 //    VARIABLES
@@ -25,6 +39,15 @@ var resourceSuffix = uniqueString(subscription().id, resourceGroup().id)
 // ------------------
 //    RESOURCES
 // ------------------
+
+resource bingSearch 'Microsoft.Bing/accounts@2020-06-10' = {
+  name: 'bingsearch-${resourceSuffix}'
+  location: 'global'
+  kind: 'Bing.Grounding'
+  sku: {
+    name: 'G1'
+  }
+}
 
 resource logAnalytics 'Microsoft.OperationalInsights/workspaces@2023-09-01' = {
   name: 'law-${resourceSuffix}'
@@ -92,6 +115,25 @@ resource modelDeployment 'Microsoft.CognitiveServices/accounts/deployments@2024-
     raiPolicyName: 'Microsoft.DefaultV2'
   }
 }]
+
+
+resource searchService 'Microsoft.Search/searchServices@2023-11-01' = {
+  name: '$searh-${resourceSuffix}'
+  location: location
+  sku: {
+    name: searchServiceSku
+  }
+  properties: {
+    authOptions: {
+      aadOrApiKey: {
+        aadAuthFailureMode: 'http401WithBearerChallenge'
+      }
+    }
+    replicaCount: searchServiceReplicaCount
+    partitionCount: searchServicePartitionCount
+  }
+}
+
 
 resource storageAccount 'Microsoft.Storage/storageAccounts@2019-04-01' = {
   name: 'storage${resourceSuffix}'
@@ -187,7 +229,7 @@ resource project 'Microsoft.MachineLearningServices/workspaces@2024-07-01-previe
   tags: tagValues
 }
 
-
+// AI Services Connection
 resource connection 'Microsoft.MachineLearningServices/workspaces/connections@2024-04-01-preview' = {
   name: 'aiServicesConnection'
   parent: hub
@@ -203,7 +245,119 @@ resource connection 'Microsoft.MachineLearningServices/workspaces/connections@20
   }
 }
 
+// BingSearch Connection
+resource bingSearchConnection 'Microsoft.MachineLearningServices/workspaces/connections@2024-04-01-preview' = {
+  name: 'BingSearch'
+  parent: hub
+  properties: {
+    category: 'ApiKey'
+    authType: 'ApiKey'
+    isSharedToAll: true
+    target: 'https://api.bing.microsoft.com/'
+    metadata: {
+      ApiVersion: '2024-02-01'
+      ApiType: 'azure'
+      ResourceId: bingSearch.id
+      location: 'global'
+    }
+    credentials: {
+      key: bingSearch.listKeys().key1
+    }
+  }
+}
+
+// Search Service Connection
+resource AISearchConnection 'Microsoft.MachineLearningServices/workspaces/connections@2024-04-01-preview' = {
+  name: 'SearchConnection'
+  parent: hub
+  properties: {
+    category: 'CognitiveSearch'
+    authType: 'ApiKey'
+    isSharedToAll: true
+    target: 'https://${searchService.name}-${resourceSuffix}.search.windows.net'
+    enforceAccessToDefaultSecretStores: true
+    metadata: {
+      ApiVersion: '2024-02-01'
+      ApiType: 'azure'
+    }
+    credentials: {
+      key: searchService.listAdminKeys().primaryKey
+    }
+  }
+}
+
+// Roles for Integrated Vectorization
+resource searchIndexDataContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '8ebe5a00-799e-43f5-93ac-243d3dce84a7'
+  scope: resourceGroup()
+}
+resource searchIndexDataContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: searchService
+  name: guid(subscription().id, resourceGroup().id, searchIndexDataContributorRole.id, searchService.id)
+  properties: {
+    principalId: project.identity.principalId
+    roleDefinitionId: searchIndexDataContributorRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+resource searchServiceContributorRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '7ca78c08-252a-4471-8644-bb5ff32d4ba0'
+  scope: resourceGroup()
+}
+resource searchServiceContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: searchService
+  name: guid(subscription().id, resourceGroup().id, searchServiceContributorRole.id, searchService.id)
+  properties: {
+    principalId: project.identity.principalId
+    roleDefinitionId: searchServiceContributorRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// For integrated vectorization access to storage
+resource searchServiceStorageReaderRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '2a2b9908-6ea1-4ae2-8e65-a410df84e7d1'
+  scope: resourceGroup()
+}
+resource storageRoleSearchService 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: searchService
+  name: guid(subscription().id, resourceGroup().id, searchServiceStorageReaderRole.id, searchService.id)
+  properties: {
+    principalId: project.identity.principalId
+    roleDefinitionId: searchServiceStorageReaderRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
+// Search Index Data Contributor
+resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(subscription().id, resourceGroup().id, searchIndexDataContributorRole.id)
+  scope: resourceGroup()
+  properties: {
+    principalType: 'User'
+    principalId: principalId
+    roleDefinitionId: searchIndexDataContributorRole.id
+  }
+}
+
+// MCP Servers
+module mcpServer 'container-app.bicep' = {
+  name: 'mcpServer'
+  params: {
+    location: location
+    resourceSuffix: resourceSuffix  
+    lawName: logAnalytics.name
+    containerRegistryName: containerRegistry.name
+  }
+  scope: resourceGroup()
+}
+
+
 output projectName string = project.name
 output projectId string = project.id
 var projectEndoint = replace(replace(project.properties.discoveryUrl, 'https://', ''), '/discovery', '')
 output projectConnectionString string = '${projectEndoint};${subscription().subscriptionId};${resourceGroup().name};${project.name}'
+
+output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
+output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPServerContainerAppFQDN
