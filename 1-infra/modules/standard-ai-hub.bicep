@@ -104,6 +104,9 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2024-10-01-preview'
     storageAccount: storageAccountId
     systemDatastoresAuthMode: 'identity'
     containerRegistry: containerRegistryId
+
+    // workspace settings
+    publicNetworkAccess: 'Enabled'
   }
   kind: 'hub'
 

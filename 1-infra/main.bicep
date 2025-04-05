@@ -179,6 +179,15 @@ module aiSearchRoleAssignments 'modules/ai-search-role-assignments.bicep' = {
   }
 }
 
+module aiProjectRoleAssignments 'modules/ai-project-role-assignments.bicep' = {
+  name: 'ai-project-role-assignments-${projectName}-${uniqueSuffix}-deployment'
+  params: {
+    aiProjectName: aiProject.outputs.aiProjectName
+    aiServicesName: aiDependencies.outputs.aiServicesName
+    userPrincipalId: principalId
+  }
+}
+
 module addCapabilityHost 'modules/add-capability-host.bicep' = {
   name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
   params: {
@@ -203,7 +212,6 @@ module mcpServer 'modules/container-app.bicep' = {
   }
   scope: resourceGroup(aiSearchServiceSubscriptionId, aiSearchServiceResourceGroupName)
 }
-
 
 output projectConnectionString string = aiProject.outputs.projectConnectionString
 output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
