@@ -150,7 +150,7 @@ resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = if(!acs
     partitionCount: 1
     publicNetworkAccess: 'enabled'
     replicaCount: 1
-    semanticSearch: 'disabled'
+    semanticSearch: 'enabled'
   }
   sku: {
     name: 'standard'
