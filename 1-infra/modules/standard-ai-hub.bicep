@@ -60,6 +60,9 @@ param bingSearchId string
 @description('Bing Search key')
 param bingSearchKey string
 
+@description('Application Insights resource ID')
+param applicationInsightsId string
+
 /* @description('Name for capabilityHost.')
 param capabilityHostName string  */
 
@@ -104,6 +107,7 @@ resource aiHub 'Microsoft.MachineLearningServices/workspaces@2024-10-01-preview'
     storageAccount: storageAccountId
     systemDatastoresAuthMode: 'identity'
     containerRegistry: containerRegistryId
+    applicationInsights: applicationInsightsId
 
     // workspace settings
     publicNetworkAccess: 'Enabled'

@@ -18,6 +18,9 @@ param aiProjectDescription string
 @description('Resource ID of the AI Hub resource')
 param aiHubId string
 
+@description('Application Insights resource ID')
+param applicationInsightsId string
+
 /* @description('Name for capabilityHost.')
 param capabilityHostName string 
 
@@ -52,9 +55,12 @@ resource aiProject 'Microsoft.MachineLearningServices/workspaces@2024-10-01-prev
     // organization
     friendlyName: aiProjectFriendlyName
     description: aiProjectDescription
+    applicationInsights: applicationInsightsId
 
     // dependent resources
     hubResourceId: aiHubId
+
+    publicNetworkAccess: 'Enabled'
   
   }
   kind: 'project'

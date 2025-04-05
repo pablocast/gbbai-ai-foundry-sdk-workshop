@@ -140,6 +140,7 @@ module aiHub 'modules/standard-ai-hub.bicep' = {
     storageAccountId: aiDependencies.outputs.storageId
     logAnalyticsId: aiDependencies.outputs.logAnalyticsId
     containerRegistryId: aiDependencies.outputs.containerRegistryId
+    applicationInsightsId: aiDependencies.outputs.applicationInsightsId
   }
 }
 
@@ -153,6 +154,7 @@ module aiProject 'modules/standard-ai-project.bicep' = {
     location: location
     tags: tags
     aiHubId: aiHub.outputs.aiHubID
+    applicationInsightsId: aiDependencies.outputs.applicationInsightsId
   }
 }
 
