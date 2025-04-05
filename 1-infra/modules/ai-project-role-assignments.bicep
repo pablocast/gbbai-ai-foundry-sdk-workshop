@@ -41,3 +41,20 @@ resource azureMLDataScientistManagedIdentityRoleAssignment 'Microsoft.Authorizat
     principalId: aiServices.identity.principalId
   }
 }
+
+
+// to read connections
+resource azureConnectionSecretsReader 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: 'ea01e6af-a1c1-4350-9563-ad00f8c72ec5'
+  scope: subscription()
+}
+
+resource azureConnectionSecretsReaderAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  name: guid(aiProject.id, azureConnectionSecretsReader.id, aiServices.id)
+  scope: aiProject
+  properties: {
+    roleDefinitionId: azureConnectionSecretsReader.id
+    principalType: 'User'
+    principalId: userPrincipalId
+  }
+}
