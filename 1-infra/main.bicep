@@ -205,7 +205,7 @@ module mcpServer 'modules/container-app.bicep' = {
 }
 
 
-output PROJECT_CONNECTION_STRING string = aiProject.outputs.projectConnectionString
+output projectConnectionString string = aiProject.outputs.projectConnectionString
 output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
 output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPServerContainerAppFQDN
 
