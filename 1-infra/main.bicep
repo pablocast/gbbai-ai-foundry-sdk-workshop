@@ -233,3 +233,5 @@ output containerRegistryName string = aiDependencies.outputs.containerRegistryNa
 
 output modelDeploymentName string = modelsConfig[2].name
 output bingConnectionName string = aiHub.outputs.bingConnectionName
+
+output azureSearchApiKey string = aiDependencies.outputs.azureSearchApiKey

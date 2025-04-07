@@ -23,6 +23,7 @@ resource searchIndexDataContributorRole 'Microsoft.Authorization/roleDefinitions
   scope: resourceGroup()
 }
 
+
 resource searchIndexDataContributorAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: searchService
   name: guid(aiProjectId, searchIndexDataContributorRole.id, searchService.id)
@@ -47,6 +48,21 @@ resource searchServiceContributorRoleAssignment 'Microsoft.Authorization/roleAss
     principalType: 'ServicePrincipal'
   }
 }
+
+resource searchIndexDataReaderRole  'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {
+  name: '1407120a-92aa-4202-b7e9-c0e197c71c8f'
+  scope: resourceGroup()
+}
+resource searchIndexDataReaderRoleRoleAssignment 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: searchService
+  name: guid(aiProjectId, searchIndexDataReaderRole.id, searchService.id)
+  properties: {
+    principalId: aiProjectPrincipalId
+    roleDefinitionId: searchIndexDataReaderRole.id
+    principalType: 'ServicePrincipal'
+  }
+}
+
 
 // integrated vectorization - access to storage account
 resource searchServiceStorageReaderRole 'Microsoft.Authorization/roleDefinitions@2022-04-01' existing = {

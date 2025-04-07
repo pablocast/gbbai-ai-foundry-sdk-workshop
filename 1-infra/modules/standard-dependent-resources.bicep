@@ -141,6 +141,11 @@ resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = if(!acs
     type: 'SystemAssigned'
   }
   properties: {
+    disableLocalAuth: false
+    authOptions: { aadOrApiKey: { aadAuthFailureMode: 'http401WithBearerChallenge'}}
+    encryptionWithCmk: {
+      enforcement: 'Unspecified'
+    }
     hostingMode: 'default'
     partitionCount: 1
     publicNetworkAccess: 'enabled'
