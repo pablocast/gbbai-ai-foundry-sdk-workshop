@@ -257,3 +257,5 @@ output applicationInsightsName string = applicationInsights.name
 
 output containerRegistryId string = containerRegistry.id
 output containerRegistryName string = containerRegistry.name
+
+output azureSearchApiKey string = aiSearch.listKeys().primaryKey
