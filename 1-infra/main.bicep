@@ -190,6 +190,16 @@ module aiProjectRoleAssignments 'modules/ai-project-role-assignments.bicep' = {
   }
 }
 
+module storageRoleAssignments 'modules/storage-role-assignments.bicep' = {
+  name: 'storage-role-assignments-${projectName}-${uniqueSuffix}-deployment'
+  params: {
+    storageAccountName: aiDependencies.outputs.storageAccountName
+    userPrincipalId: principalId
+  }
+}
+
+
+
 module addCapabilityHost 'modules/add-capability-host.bicep' = {
   name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
   params: {
@@ -224,3 +234,5 @@ output containerRegistryName string = aiDependencies.outputs.containerRegistryNa
 
 output modelDeploymentName string = modelsConfig[2].name
 output bingConnectionName string = aiHub.outputs.bingConnectionName
+
+output aiServicesKey string = aiDependencies.outputs.aiServicesKey
