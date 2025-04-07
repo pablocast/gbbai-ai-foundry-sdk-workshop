@@ -279,10 +279,10 @@ def run(
     try:
         output_text = subprocess.check_output(
             command, shell=True, stderr=subprocess.STDOUT
-        ).decode("utf-8")
+        ).decode("cp1252")
         success = True
     except subprocess.CalledProcessError as e:
-        output_text = e.output.decode("utf-8")
+        output_text = e.output.decode("cp1252")
         success = False
 
     minutes, seconds = divmod(time.time() - start_time, 60)
