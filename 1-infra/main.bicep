@@ -154,7 +154,6 @@ module aiProject 'modules/standard-ai-project.bicep' = {
     location: location
     tags: tags
     aiHubId: aiHub.outputs.aiHubID
-    applicationInsightsId: aiDependencies.outputs.applicationInsightsId
   }
 }
 
