@@ -31,5 +31,6 @@ typing                                       # Type hinting support
 # MCP protocol
 mcp
 
-# Semantic Kernel
-semantic-kernel==1.27.2
+# Black
+black[jupyter]
+
