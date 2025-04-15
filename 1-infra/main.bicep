@@ -231,7 +231,7 @@ output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPSer
 output applicationInsightsName  string = aiDependencies.outputs.applicationInsightsName
 output containerRegistryName string = aiDependencies.outputs.containerRegistryName
 
-output modelDeploymentName string = modelsConfig[2].name
+output modelDeploymentName string = modelsConfig[1].name
 output bingConnectionName string = aiHub.outputs.bingConnectionName
 
 output azureSearchApiKey string = aiDependencies.outputs.azureSearchApiKey
