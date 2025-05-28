@@ -4,7 +4,7 @@ azure-ai-projects                             # Azure AI project management
 azure-ai-inference[opentelemetry]             # Azure AI inference with OpenTelemetry support
 azure-ai-evaluation                           # Azure AI model evaluation tools
 azure-ai-contentsafety                        # Azure content safety services
-azure-search-documents==11.6.0b4                     # Azure AI Search integration
+azure-search-documents==11.6.0b12                     # Azure AI Search integration
 azure-ai-ml
 
 # Telemetry and Monitoring
@@ -26,7 +26,7 @@ tabulate                                     # Pretty-print tabular data
 nbformat                                     # Notebook format conversion
 asyncio                                      # Async I/O support
 typing                                       # Type hinting support
-
+aiofiles
 
 # MCP protocol
 mcp

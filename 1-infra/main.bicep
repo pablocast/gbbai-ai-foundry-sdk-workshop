@@ -194,6 +194,7 @@ module storageRoleAssignments 'modules/storage-role-assignments.bicep' = {
   params: {
     storageAccountName: aiDependencies.outputs.storageAccountName
     userPrincipalId: principalId
+    searchServicePrincipalId: aiDependencies.outputs.aiSearchPrincipalId
   }
 }
 
@@ -231,7 +232,12 @@ output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPSer
 output applicationInsightsName  string = aiDependencies.outputs.applicationInsightsName
 output containerRegistryName string = aiDependencies.outputs.containerRegistryName
 
-output modelDeploymentName string = modelsConfig[1].name
+output generativeModelDeploymentName string = modelsConfig[2].name
+output embeddingModelDeploymentName string = modelsConfig[1].name
 output bingConnectionName string = aiHub.outputs.bingConnectionName
 
-output azureSearchApiKey string = aiDependencies.outputs.azureSearchApiKey
+output aiSearchEndpoint string = aiDependencies.outputs.aiSearchEndpoint
+output openAIEndpoint string = aiDependencies.outputs.openAIEndpoint
+output azureStorageAccountUrl string = 'https://${aiDependencies.outputs.storageAccountName}.blob.core.windows.net/'
+output azureStorageAccountName string = aiDependencies.outputs.storageAccountName
+output aiServicesEndpoint string = aiDependencies.outputs.aiservicesTarget

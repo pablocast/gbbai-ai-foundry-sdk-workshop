@@ -72,7 +72,7 @@ resource cognitiveServicesUserRoleAssignment 'Microsoft.Authorization/roleAssign
 }
 
 // Integrated vectorization - access to models
-resource cognitiveServicesRoleSearch 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+resource cognitiveServicesOpenAIRoleSearch 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
   scope: aiServices
   name: guid(aiProjectId, cognitiveServicesOpenAIUserRole.id, searchService.id)
   properties: {
@@ -103,3 +103,17 @@ resource cognitiveServicesRoleUser 'Microsoft.Authorization/roleAssignments@2020
     roleDefinitionId: cognitiveServicesUserRole.id
   }
 }
+
+
+// For Cognitive Services for Search
+resource cognitiveServicesRoleSearch 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(subscription().id, resourceGroup().id, cognitiveServicesUserRole.id, searchService.id)
+  scope: resourceGroup()
+  properties: {
+    principalType: 'ServicePrincipal'
+    principalId: searchService.identity.principalId
+    roleDefinitionId: cognitiveServicesUserRole.id
+  }
+}
+
+

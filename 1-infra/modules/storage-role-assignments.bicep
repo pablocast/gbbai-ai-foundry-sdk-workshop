@@ -1,5 +1,6 @@
 param storageAccountName string
 param userPrincipalId string
+param searchServicePrincipalId string
 
 resource storageService 'Microsoft.Storage/storageAccounts@2022-09-01' existing = {
   name: storageAccountName
@@ -35,3 +36,14 @@ resource storageRoleBlobDataContributor 'Microsoft.Authorization/roleAssignments
     principalType: 'User'
   }
 }
+
+resource storageRoleSearchService 'Microsoft.Authorization/roleAssignments@2022-04-01' = {
+  scope: storageService
+  name: guid(subscription().id, resourceGroup().id, searchServicePrincipalId, storageService.id)
+  properties: {
+    principalId: searchServicePrincipalId
+    roleDefinitionId: storageBlobDataContributor.id
+    principalType: 'ServicePrincipal'
+  }
+}
+

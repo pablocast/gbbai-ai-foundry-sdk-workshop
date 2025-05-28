@@ -86,15 +86,12 @@ resource aiServices 'Microsoft.CognitiveServices/accounts@2024-10-01' = if(!aiSe
   sku: {
     name: 'S0'
   }
-  kind: 'AIServices' // or 'OpenAI'
+  kind: 'AIServices' 
   identity: {
     type: 'SystemAssigned'
   }
   properties: {
     customSubDomainName: toLower('${(aiServicesName)}')
-    apiProperties: {
-      statisticsEnabled: false
-    }
     publicNetworkAccess: 'Enabled'
   }
 }
@@ -141,7 +138,6 @@ resource aiSearch 'Microsoft.Search/searchServices@2024-06-01-preview' = if(!acs
     type: 'SystemAssigned'
   }
   properties: {
-    disableLocalAuth: false
     authOptions: { aadOrApiKey: { aadAuthFailureMode: 'http401WithBearerChallenge'}}
     encryptionWithCmk: {
       enforcement: 'Unspecified'
@@ -165,7 +161,7 @@ resource existingAIStorageAccount 'Microsoft.Storage/storageAccounts@2023-05-01'
 }
 
 // Some regions doesn't support Standard Zone-Redundant storage, need to use Geo-redundant storage
-param noZRSRegions array = ['southindia', 'westus']
+param noZRSRegions array = ['southindia', 'westus',  'northcentralus']
 param sku object = contains(noZRSRegions, location) ? { name: 'Standard_GRS' } : { name: 'Standard_ZRS' }
 
 resource storage 'Microsoft.Storage/storageAccounts@2023-05-01' = if(!aiStorageExists) {
@@ -229,7 +225,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2019-05-01' =
 
 output aiServicesName string =  aiServiceExists ? existingAIServiceAccount.name : aiServicesName
 output aiservicesID string = aiServiceExists ? existingAIServiceAccount.id : aiServices.id
-output aiservicesTarget string = aiServiceExists ? existingAIServiceAccount.properties.endpoint : aiServices.properties.endpoint
+output aiservicesTarget string = 'https://${aiServices.name}.cognitiveservices.azure.com'
 output aiServiceAccountResourceGroupName string = aiServiceExists ? aiServiceParts[4] : resourceGroup().name
 output aiServiceAccountSubscriptionId string = aiServiceExists ? aiServiceParts[2] : subscription().subscriptionId 
 
@@ -260,3 +256,7 @@ output containerRegistryName string = containerRegistry.name
 
 var searchKeys = aiSearch.listAdminKeys()
 output azureSearchApiKey string = searchKeys.primaryKey
+
+output aiSearchEndpoint string = 'https://${aiSearch.name}.search.windows.net/'
+output openAIEndpoint string = 'https://${aiServices.name}.openai.azure.com/'
+output aiSearchPrincipalId string = aiSearch.identity.principalId

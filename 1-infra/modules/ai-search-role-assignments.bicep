@@ -81,7 +81,7 @@ resource storageRoleSearchService 'Microsoft.Authorization/roleAssignments@2022-
 }
 
 // Search Index Data Contributor
-resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+resource userSearchIndexDataContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
   name: guid(subscription().id, resourceGroup().id, searchIndexDataContributorRole.id)
   scope: resourceGroup()
   properties: {
@@ -90,3 +90,25 @@ resource roleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-prev
     roleDefinitionId: searchIndexDataContributorRole.id
   }
 }
+
+resource userSearchServiceContributorRoleAssignment 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(subscription().id, resourceGroup().id, searchServiceContributorRole.id)
+  scope: resourceGroup()
+  properties: {
+    principalType: 'User'
+    principalId: userPrincipalId
+    roleDefinitionId: searchServiceContributorRole.id
+  }
+}
+
+resource userSearchIndexDataReaderRole 'Microsoft.Authorization/roleAssignments@2020-04-01-preview' = {
+  name: guid(subscription().id, resourceGroup().id, searchIndexDataReaderRole.id)
+  scope: resourceGroup()
+  properties: {
+    principalType: 'User'
+    principalId: userPrincipalId
+    roleDefinitionId: searchIndexDataReaderRole.id
+  }
+}
+
+
