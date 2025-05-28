@@ -117,3 +117,6 @@ resource cognitiveServicesRoleSearch 'Microsoft.Authorization/roleAssignments@20
 }
 
 
+
+
+

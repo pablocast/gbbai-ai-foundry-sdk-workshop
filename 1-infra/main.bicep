@@ -52,6 +52,9 @@ param storageName string = 'agent-storage'
 @description('Name of the Azure AI Services account')
 param aiServicesName string = 'agent-ai-services'
 
+@description('Friendly name for your Cognitive Services resource')
+param cogServicesName string = 'agent-cog-services'
+
 @description('Configuration array for Inference Models')
 param modelsConfig array = []
 
@@ -92,6 +95,7 @@ module aiDependencies 'modules/standard-dependent-resources.bicep' = {
   name: 'dependencies-${name}-${uniqueSuffix}-deployment'
   params: {
     location: location
+    cogServicesName: '${cogServicesName}-${uniqueSuffix}'
     storageName: '${storageName}${uniqueSuffix}'
     keyvaultName: 'kv-${name}-${uniqueSuffix}'
     aiServicesName: '${aiServicesName}${uniqueSuffix}'
@@ -199,35 +203,34 @@ module storageRoleAssignments 'modules/storage-role-assignments.bicep' = {
 }
 
 
+// module addCapabilityHost 'modules/add-capability-host.bicep' = {
+//   name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
+//   params: {
+//     capabilityHostName: '${uniqueSuffix}-${capabilityHostName}'
+//     aiHubName: aiHub.outputs.aiHubName
+//     aiProjectName: aiProject.outputs.aiProjectName
+//     acsConnectionName: aiHub.outputs.acsConnectionName
+//     aoaiConnectionName: aiHub.outputs.aoaiConnectionName
+//   }
+//   dependsOn: [
+//     aiSearchRoleAssignments,aiServiceRoleAssignments
+//   ]
+// }
 
-module addCapabilityHost 'modules/add-capability-host.bicep' = {
-  name: 'capabilityHost-configuration-${uniqueSuffix}-deployment'
-  params: {
-    capabilityHostName: '${uniqueSuffix}-${capabilityHostName}'
-    aiHubName: aiHub.outputs.aiHubName
-    aiProjectName: aiProject.outputs.aiProjectName
-    acsConnectionName: aiHub.outputs.acsConnectionName
-    aoaiConnectionName: aiHub.outputs.aoaiConnectionName
-  }
-  dependsOn: [
-    aiSearchRoleAssignments,aiServiceRoleAssignments
-  ]
-}
-
-module mcpServer 'modules/container-app.bicep' = {
-  name: 'mcpServer'
-  params: {
-    location: location
-    resourceSuffix: uniqueSuffix
-    lawName: aiDependencies.outputs.logAnalyticsName
-    containerRegistryName: aiDependencies.outputs.containerRegistryName
-  }
-  scope: resourceGroup(aiSearchServiceSubscriptionId, aiSearchServiceResourceGroupName)
-}
+// module mcpServer 'modules/container-app.bicep' = {
+//   name: 'mcpServer'
+//   params: {
+//     location: location
+//     resourceSuffix: uniqueSuffix
+//     lawName: aiDependencies.outputs.logAnalyticsName
+//     containerRegistryName: aiDependencies.outputs.containerRegistryName
+//   }
+//   scope: resourceGroup(aiSearchServiceSubscriptionId, aiSearchServiceResourceGroupName)
+// }
 
 output projectConnectionString string = aiProject.outputs.projectConnectionString
-output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
-output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPServerContainerAppFQDN
+// output weatherMCPServerContainerAppResourceName string = mcpServer.outputs.weatherMCPServerContainerAppResourceName
+// output weatherMCPServerContainerAppFQDN string = mcpServer.outputs.weatherMCPServerContainerAppFQDN
 
 output applicationInsightsName  string = aiDependencies.outputs.applicationInsightsName
 output containerRegistryName string = aiDependencies.outputs.containerRegistryName

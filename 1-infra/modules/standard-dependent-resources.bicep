@@ -44,6 +44,9 @@ param aiStorageAccountResourceId string
 @description('Bing Search Service name')
 param bingSearchName string 
 
+@description('Name of the Cognitive Services resource')
+param cogServicesName string
+
 var aiServiceExists = aiServiceAccountResourceId != ''
 var acsExists = aiSearchServiceResourceId != ''
 var aiStorageExists = aiStorageAccountResourceId != ''
@@ -79,6 +82,24 @@ resource existingAIServiceAccount 'Microsoft.CognitiveServices/accounts@2024-10-
   name: aiServiceParts[8]
   scope: resourceGroup(aiServiceParts[2], aiServiceParts[4])
 }
+
+resource cogServices 'Microsoft.CognitiveServices/accounts@2021-10-01' = {
+  name: cogServicesName
+  location: location
+  sku: {
+    name: 'S0'
+  }
+  kind: 'CognitiveServices'
+  properties: {
+    apiProperties: {
+      statisticsEnabled: false
+    }
+    customSubDomainName: cogServicesName
+    publicNetworkAccess: 'Enabled'
+
+  }
+}
+
 
 resource aiServices 'Microsoft.CognitiveServices/accounts@2024-10-01' = if(!aiServiceExists) {
   name: aiServicesName
@@ -225,7 +246,7 @@ resource containerRegistry 'Microsoft.ContainerRegistry/registries@2019-05-01' =
 
 output aiServicesName string =  aiServiceExists ? existingAIServiceAccount.name : aiServicesName
 output aiservicesID string = aiServiceExists ? existingAIServiceAccount.id : aiServices.id
-output aiservicesTarget string = 'https://${aiServices.name}.cognitiveservices.azure.com'
+output aiservicesTarget string = 'https://${cogServicesName}.cognitiveservices.azure.com'
 output aiServiceAccountResourceGroupName string = aiServiceExists ? aiServiceParts[4] : resourceGroup().name
 output aiServiceAccountSubscriptionId string = aiServiceExists ? aiServiceParts[2] : subscription().subscriptionId 
 
